@@ -43,6 +43,11 @@
  * along with Posts Per Page. If not, see {URI to Plugin License}.
  */
 
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
 class Custom_Posts_Per_Page_Foghlaim {
 
 	/**
