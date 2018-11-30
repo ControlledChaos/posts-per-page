@@ -48,12 +48,23 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-class Custom_Posts_Per_Page_Foghlaim {
+/**
+ * The core plugin class
+ *
+ * Defines constants and variables, gets the initialization class file
+ * plus the activation and deactivation classes.
+ *
+ * @since  1.0.0
+ * @access public
+ */
+class CCD_Posts_Per_Page {
 
 	/**
 	 * When our first page has a different count than subsequent pages, we need to make
 	 * sure the offset value is selected in order for the query to be as aware as us.
 	 *
+	 * @since   1.0.0
+	 * @access  private
 	 * @var int contains the offset to pass to the query
 	 */
 	private $page_count_offset = 0;
@@ -62,14 +73,18 @@ class Custom_Posts_Per_Page_Foghlaim {
 	 * We'll want to share some data about the final determinations we've made concerning
 	 * the page view amongst methods. This is a good a container as any for it.
 	 *
+	 * @since     1.0.0
+	 * @access    private
 	 * @var array containing option data
 	 */
-	private $final_options = array();
+	private $final_options = [];
 
 	/**
 	 * If we're on page 1, this will always be false. But if we do land on a page 2 or more,
 	 * we'll be rocking true and can use that info.
 	 *
+	 * @since    1.0.0
+	 * @access   private
 	 * @var bool indication of whether a paged view has been requested
 	 */
 	private $paged_view = false;
@@ -78,6 +93,8 @@ class Custom_Posts_Per_Page_Foghlaim {
 	 * If we're on page 1 of a big view, WordPress will give us 0. But it will report 2 and
 	 * above, so we should be aware.
 	 *
+	 * @since   1.0.0
+	 * @access  private
 	 * @var int containing the currently viewed page number
 	 */
 	private $page_number = 1;
@@ -87,28 +104,38 @@ class Custom_Posts_Per_Page_Foghlaim {
 	 *
 	 * Our pre_get_posts action should only happen on non admin screens
 	 * otherwise things get weird.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return self
 	 */
 	public function __construct() {
-		register_activation_hook( __FILE__, array( $this, 'upgrade_check' ) );
 
-		add_filter( 'plugin_action_links', array( $this, 'add_plugin_action_links' ), 10, 2 );
+		register_activation_hook( __FILE__, [ $this, 'upgrade_check' ] );
 
-		add_action( 'admin_init', array( $this, 'upgrade_check' ) );
-		add_action( 'admin_init', array( $this, 'register_settings' ) );
-		add_action( 'admin_init', array( $this, 'add_languages' ) );
+		add_filter( 'plugin_action_links', [ $this, 'add_plugin_action_links' ], 10, 2 );
 
-		add_action( 'admin_menu', array( $this, 'add_settings' ) );
+		add_action( 'admin_init', [ $this, 'upgrade_check' ] );
+		add_action( 'admin_init', [ $this, 'register_settings' ] );
+		add_action( 'admin_init', [ $this, 'languages' ] );
+
+		add_action( 'admin_menu', [ $this, 'add_settings' ] );
 
 		if ( ! is_admin() ) {
-			add_action( 'pre_get_posts', array( $this, 'modify_query' ) );
+			add_action( 'pre_get_posts', [ $this, 'modify_query' ] );
 		}
+
 	}
 
 	/**
-	 * Load the posts-per-page text domain for internationalization
+	 * Load the posts-per-page text domain for internationalization.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
-	public function add_languages() {
-		load_plugin_textdomain( 'posts-per-page', false, basename( dirname( __FILE__ ) ) . '/lang' );
+	public function languages() {
+		load_plugin_textdomain( 'posts-per-page', false, basename( dirname( __FILE__ ) ) . '/languages' );
 	}
 
 	/**
@@ -116,8 +143,13 @@ class Custom_Posts_Per_Page_Foghlaim {
 	 *
 	 * In version 1.3, we refactored the option names a bit, so a little
 	 * cleanup is needed if we detect and old version.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function upgrade_check() {
+
 		if ( '1.3' === get_option( 'ccd_ppp_upgrade', '1.3' ) ) {
 			$this->activate();
 
@@ -136,6 +168,7 @@ class Custom_Posts_Per_Page_Foghlaim {
 			update_option( 'ccd_ppp_options', $ccd_ppp_options );
 			update_option( 'ccd_ppp_upgrade', '1.4' );
 		}
+
 	}
 
 	/**
@@ -144,14 +177,20 @@ class Custom_Posts_Per_Page_Foghlaim {
 	 *
 	 * When first activated, we set some default values in an options array. The default value
 	 * is pulled from the current 'posts_per_page' option so that nothing changes unexpectedly.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function activate() {
+
 		$default_count     = get_option( 'posts_per_page' );
 		$current_options   = get_option( 'ccd_ppp_options' );
-		$default_options   = array();
-		$option_type_array = array( 'front', 'category', 'tag', 'author', 'archive', 'search', 'default' );
+		$default_options   = [];
+		$option_type_array = [ 'front', 'category', 'tag', 'author', 'archive', 'search', 'default' ];
 
 		foreach ( $option_type_array as $option_type ) {
+
 			$default_options[ $option_type . '_count' ] = absint( $default_count );
 
 			/* For some users that are upgrading from a past version, we want to make sure the paged count
@@ -163,14 +202,17 @@ class Custom_Posts_Per_Page_Foghlaim {
 			} else {
 				$default_options[ $option_type . '_count_paged' ] = absint( $default_count );
 			}
+
 		}
 
 		/*  We'll also get all of the currently registered custom post types and give them a default value
 		 *  of 0 if one has not previously been set. Custom post types are a special breed and we don't
 		 *  necessarily want them to match the default posts_per_page value without a conscious decision
 		 *  by the user. */
-		$all_post_types = get_post_types( array( '_builtin' => false ) );
+		$all_post_types = get_post_types( [ '_builtin' => false ] );
+
 		foreach ( $all_post_types as $p => $k ) {
+
 			if ( isset( $current_options[ $p . '_count' ] ) ) {
 				$default_options[ $p . '_count' ] = absint( $current_options[ $p . '_count' ] );
 			} else {
@@ -183,7 +225,9 @@ class Custom_Posts_Per_Page_Foghlaim {
 				$default_options[ $p . '_count_paged' ] = 0;
 			}
 		}
+
 		update_option( 'ccd_ppp_options', $default_options );
+
 	}
 
 	/**
@@ -192,11 +236,14 @@ class Custom_Posts_Per_Page_Foghlaim {
 	 * This function gratefully taken (and barely modified) from Pippin Williamson's
 	 * WPMods article: http://www.wpmods.com/adding-plugin-action-links/
 	 *
-	 * @param $links array of links provided by core that will be displayed under the plugin
-	 * @param $file string representing the plugin's filename
+	 * @since  1.0.0
+	 * @access public
+	 * @param  $links array of links provided by core that will be displayed under the plugin
+	 * @param  $file string representing the plugin's filename
 	 * @return array the new array of links to be displayed
 	 */
 	public function add_plugin_action_links( $links, $file ) {
+
 		static $this_plugin;
 
 		if ( ! $this_plugin ) {
@@ -207,20 +254,31 @@ class Custom_Posts_Per_Page_Foghlaim {
 			$settings_link = '<a href="' . site_url( '/wp-admin/options-general.php?page=post-count-settings' ) . '">' . __('Settings', 'posts-per-page') . '</a>';
 			array_unshift( $links, $settings_link );
 		}
+
 		return $links;
+
 	}
 
 	/**
 	 * Add the settings page for Posts Per Page under the settings menu.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function add_settings() {
-		add_options_page( __( 'Posts Per Page', 'posts-per-page' ), __( 'Posts Per Page', 'posts-per-page' ), 'manage_options', 'post-count-settings', array( $this, 'view_settings' ) );
+		add_options_page( __( 'Posts Per Page', 'posts-per-page' ), __( 'Posts Per Page', 'posts-per-page' ), 'manage_options', 'post-count-settings', [ $this, 'view_settings' ] );
 	}
 
 	/**
 	 * Display the main settings view for the plugin.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function view_settings() {
+
 		?>
 		<div class="wrap">
 			<div class="icon32" id="icon-options-general"></div>
@@ -244,22 +302,28 @@ class Custom_Posts_Per_Page_Foghlaim {
 
 	/**
 	 * Register all of the settings we'll be using.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function register_settings() {
-		register_setting( 'ccd_ppp_options', 'ccd_ppp_options', array( $this, 'validate_options' ) );
 
-		add_settings_section( 'ccd_ppp_section_main', '', array( $this, 'output_main_section_text' ), 'ccd_ppp' );
-		add_settings_section( 'ccd_ppp_section_custom', '', array( $this, 'output_custom_section_text' ), 'ccd_ppp_custom' );
+		register_setting( 'ccd_ppp_options', 'ccd_ppp_options', [ $this, 'validate_options'] );
 
-		add_settings_field( 'ccd_ppp_index_count',     __( 'Main Index posts per page:', 'posts-per-page' ), array( $this, 'output_index_count_text' ),    'ccd_ppp', 'ccd_ppp_section_main' );
-		add_settings_field( 'ccd_ppp_category_count',  __( 'Category posts per page:', 'posts-per-page' ),   array( $this, 'output_category_count_text' ), 'ccd_ppp', 'ccd_ppp_section_main' );
-		add_settings_field( 'ccd_ppp_archive_count',   __( 'Archive posts per page:', 'posts-per-page' ),    array( $this, 'output_archive_count_text' ),  'ccd_ppp', 'ccd_ppp_section_main' );
-		add_settings_field( 'ccd_ppp_tag_count',       __( 'Tag posts per page:', 'posts-per-page' ),        array( $this, 'output_tag_count_text' ),      'ccd_ppp', 'ccd_ppp_section_main' );
-		add_settings_field( 'ccd_ppp_author_count',    __( 'Author posts per page:', 'posts-per-page' ),     array( $this, 'output_author_count_text' ),   'ccd_ppp', 'ccd_ppp_section_main' );
-		add_settings_field( 'ccd_ppp_search_count',    __( 'Search posts per page:', 'posts-per-page' ),     array( $this, 'output_search_count_text' ),   'ccd_ppp', 'ccd_ppp_section_main' );
-		add_settings_field( 'ccd_ppp_default_count',   __( 'Default posts per page:', 'posts-per-page' ),    array( $this, 'output_default_count_text' ),  'ccd_ppp', 'ccd_ppp_section_main' );
+		add_settings_section( 'ccd_ppp_section_main', '', [ $this, 'output_main_section_text' ], 'ccd_ppp' );
+		add_settings_section( 'ccd_ppp_section_custom', '', [ $this, 'output_custom_section_text' ], 'ccd_ppp_custom' );
 
-		add_settings_field( 'ccd_ppp_post_type_count', '', array( $this, 'output_post_type_count_text' ), 'ccd_ppp_custom', 'ccd_ppp_section_custom' );
+		add_settings_field( 'ccd_ppp_index_count',     __( 'Main Index posts per page:', 'posts-per-page' ), [ $this, 'output_index_count_text' ],    'ccd_ppp', 'ccd_ppp_section_main' );
+		add_settings_field( 'ccd_ppp_category_count',  __( 'Category posts per page:', 'posts-per-page' ),   [ $this, 'output_category_count_text' ], 'ccd_ppp', 'ccd_ppp_section_main' );
+		add_settings_field( 'ccd_ppp_archive_count',   __( 'Archive posts per page:', 'posts-per-page' ),    [ $this, 'output_archive_count_text' ],  'ccd_ppp', 'ccd_ppp_section_main' );
+		add_settings_field( 'ccd_ppp_tag_count',       __( 'Tag posts per page:', 'posts-per-page' ),        [ $this, 'output_tag_count_text' ],      'ccd_ppp', 'ccd_ppp_section_main' );
+		add_settings_field( 'ccd_ppp_author_count',    __( 'Author posts per page:', 'posts-per-page' ),     [ $this, 'output_author_count_text' ],   'ccd_ppp', 'ccd_ppp_section_main' );
+		add_settings_field( 'ccd_ppp_search_count',    __( 'Search posts per page:', 'posts-per-page' ),     [ $this, 'output_search_count_text' ],   'ccd_ppp', 'ccd_ppp_section_main' );
+		add_settings_field( 'ccd_ppp_default_count',   __( 'Default posts per page:', 'posts-per-page' ),    [ $this, 'output_default_count_text' ],  'ccd_ppp', 'ccd_ppp_section_main' );
+
+		add_settings_field( 'ccd_ppp_post_type_count', '', [ $this, 'output_post_type_count_text' ], 'ccd_ppp_custom', 'ccd_ppp_section_custom' );
+
 	}
 
 	/**
@@ -269,7 +333,9 @@ class Custom_Posts_Per_Page_Foghlaim {
 	 * If you enter anything other than an integer, the value will be set to 0 by
 	 * default and if a negative value is inputted, it will be corrected to positive.
 	 *
-	 * @param $input array of counts destined to be used as posts_per_page options
+	 * @since  1.0.0
+	 * @access public
+	 * @param  $input array of counts destined to be used as posts_per_page options
 	 * @return array the same array with absint run on each
 	 */
 	public function validate_options( $input ) {
@@ -278,6 +344,10 @@ class Custom_Posts_Per_Page_Foghlaim {
 
 	/**
 	 * Output the main section of text.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function output_main_section_text() {
 		?>
@@ -293,8 +363,13 @@ class Custom_Posts_Per_Page_Foghlaim {
 
 	/**
 	 * Output the custom post type section of text.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function output_custom_section_text() {
+
 		?>
 		<h3><?php _e( 'Custom Post Type Specific Settings', 'posts-per-page' ); ?></h3>
 		<p style="max-width:640px;margin-left:12px;"><?php _e( 'This section contains a list of all of your registered custom post
@@ -302,19 +377,26 @@ class Custom_Posts_Per_Page_Foghlaim {
 		set to 0, it will not modify any page requests for that custom post type archive. For Custom Posts Per Page to
 		control the number of posts to display, these will need to be changed.', 'custom-post-per-page' ); ?></p>
 		<?php
+
 	}
 
 	/**
-	 * Output the individual options for each custom post type registered in WordPress
+	 * Output the individual options for each custom post type registered in WordPress.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function output_post_type_count_text() {
-		$ccd_ppp_options  = get_option( 'ccd_ppp_options' );
-		$all_post_types = get_post_types( array( '_builtin' => false ) );
+
+		$ccd_ppp_options = get_option( 'ccd_ppp_options' );
+		$all_post_types  = get_post_types( [ '_builtin' => false ] );
 
 		/* Quirky little workaround for displaying the settings in our table */
 		echo '</td><td></td></tr>';
 
 		foreach ( $all_post_types as $p => $k ) {
+
 			/*	Default values are assigned for custom post types that are available
 			 *  to us when our plugin is registered. If a custom post type becomes
 			 *  available after our plugin is installed, we'll want to catch it and
@@ -338,13 +420,19 @@ class Custom_Posts_Per_Page_Foghlaim {
 			</tr>
 			<?php
 		}
+
 	}
 
 	/**
 	 * Display the input field for the index page post count option.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function output_index_count_text() {
-		$ccd_ppp_options = get_option( 'ccd_ppp_options', array( 'front_count' => 0, 'front_count_paged' => 0 ) );
+
+		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'front_count' => 0, 'front_count_paged' => 0 ] );
 
 		?>
 		<input id="ccd_ppp_index_count[0]" name="ccd_ppp_options[front_count]" size="10" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'front_count' ] ); ?>" />
@@ -354,9 +442,14 @@ class Custom_Posts_Per_Page_Foghlaim {
 
 	/**
 	 * Display the input field for the category page post count option.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function output_category_count_text() {
-		$ccd_ppp_options = get_option( 'ccd_ppp_options', array( 'category_count' => 0, 'category_count_paged' => 0 ) );
+
+		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'category_count' => 0, 'category_count_paged' => 0 ] );
 
 		?>
 		<input id="cppppc_category_count[0]" name="ccd_ppp_options[category_count]" size="10" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'category_count' ] ); ?>" />
@@ -366,9 +459,14 @@ class Custom_Posts_Per_Page_Foghlaim {
 
 	/**
 	 * Display the input field for the archive page post count option.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function output_archive_count_text() {
-		$ccd_ppp_options = get_option( 'ccd_ppp_options', array( 'archive_count' => 0, 'archive_count_paged' => 0 ) );
+
+		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'archive_count' => 0, 'archive_count_paged' => 0 ] );
 
 		?>
 		<input id="cppppc_archive_count[0]" name="ccd_ppp_options[archive_count]" size="10" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'archive_count' ] ); ?>" />
@@ -378,9 +476,14 @@ class Custom_Posts_Per_Page_Foghlaim {
 
 	/**
 	 * Display the input field for the tag page post count option.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function output_tag_count_text() {
-		$ccd_ppp_options = get_option( 'ccd_ppp_options', array( 'tag_count' => 0, 'tag_count_paged' => 0 ) );
+
+		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'tag_count' => 0, 'tag_count_paged' => 0 ] );
 
 		?>
 		<input id="ccd_ppp_tag_count[0]" name="ccd_ppp_options[tag_count]" size="10" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'tag_count' ] ); ?>" />
@@ -390,9 +493,14 @@ class Custom_Posts_Per_Page_Foghlaim {
 
 	/**
 	 * Display the input field for the author page post count option.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function output_author_count_text() {
-		$ccd_ppp_options = get_option( 'ccd_ppp_options', array( 'author_count' => 0, 'author_count_paged' => 0 ) );
+
+		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'author_count' => 0, 'author_count_paged' => 0 ] );
 
 		?>
 		<input id="ccd_ppp_author_count[0]" name="ccd_ppp_options[author_count]" size="10" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'author_count' ] ); ?>" />
@@ -402,9 +510,14 @@ class Custom_Posts_Per_Page_Foghlaim {
 
 	/**
 	 * Display the input field for the search page post count option.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function output_search_count_text() {
-		$ccd_ppp_options = get_option( 'ccd_ppp_options', array( 'search_count' => 0, 'search_count_paged' => 0 ) );
+
+		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'search_count' => 0, 'search_count_paged' => 0 ] );
 
 		?>
 		<input id="cppppc_search_count[0]" name="ccd_ppp_options[search_count]" size="10" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'search_count' ] ); ?>" />
@@ -414,9 +527,14 @@ class Custom_Posts_Per_Page_Foghlaim {
 
 	/**
 	 * Display the input field for the default page post count option.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
 	 */
 	public function output_default_count_text() {
-		$ccd_ppp_options = get_option( 'ccd_ppp_options', array( 'default_count' => 0, 'default_count_paged' => 0 ) );
+
+		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'default_count' => 0, 'default_count_paged' => 0 ] );
 
 		?>
 		<input id="cppppc_default_count[0]" name="ccd_ppp_options[default_count]" size="10" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'default_count' ] ); ?>" />
@@ -428,7 +546,9 @@ class Custom_Posts_Per_Page_Foghlaim {
 	 * This is the important part of the plugin that actually modifies the query before anything
 	 * is displayed.
 	 *
-	 * @param $query WP Query object
+	 * @since  1.0.0
+	 * @access public
+	 * @param  $query WP Query object
 	 * @return mixed
 	 */
 	public function modify_query( $query ) {
@@ -439,8 +559,9 @@ class Custom_Posts_Per_Page_Foghlaim {
 		}
 
 		$ccd_ppp_options   = get_option( 'ccd_ppp_options' );
-		$all_post_types  = get_post_types( array( '_builtin' => false ) );
-		$post_type_array = array();
+		$all_post_types  = get_post_types( [ '_builtin' => false ] );
+		$post_type_array = [];
+
 		foreach ( $all_post_types as $p=> $k ) {
 			$post_type_array[] = $p;
 		}
@@ -474,7 +595,8 @@ class Custom_Posts_Per_Page_Foghlaim {
 			$query->set( 'offset', absint( $this->final_options['offset'] ) );
 		}
 
-		add_filter( 'found_posts', array( $this, 'correct_found_posts' ) );
+		add_filter( 'found_posts', [ $this, 'correct_found_posts' ] );
+
 	}
 
 	/**
@@ -486,7 +608,9 @@ class Custom_Posts_Per_Page_Foghlaim {
 	 * than subsequent pages. This is intended to resolve pagination issues in popular WordPress plugins, but can
 	 * possibly cause related issues for other things that are depending on an exact found posts value.
 	 *
-	 * @param $found_posts int The number of found posts
+	 * @since  1.0.0
+	 * @access public
+	 * @param  $found_posts int The number of found posts
 	 * @return mixed The number of posts to report as found for real
 	 */
 	public function correct_found_posts( $found_posts ) {
@@ -513,6 +637,7 @@ class Custom_Posts_Per_Page_Foghlaim {
 		}
 
 		return $found_posts;
+
 	}
 
 	/**
@@ -521,22 +646,32 @@ class Custom_Posts_Per_Page_Foghlaim {
 	 * and subsequent pages. The options are stored in a private property that allows us
 	 * access throughout the class after this.
 	 *
-	 * @param $option_prefix string prefix of the count and count_paged options in the database
-	 * @param $ccd_ppp_options array of options from the database for custom posts per page
+	 * @since  1.0.0
+	 * @access public
+	 * @param  $option_prefix string prefix of the count and count_paged options in the database.
+	 * @param  $ccd_ppp_options array of options from the database for custom posts per page.
+	 * @return void
 	 */
 	public function process_options( $option_prefix, $ccd_ppp_options ) {
+
 		if ( ! $this->paged_view && ! empty( $ccd_ppp_options[ $option_prefix . '_count' ] ) ) {
-			$this->final_options[ 'posts' ]  = $ccd_ppp_options[ $option_prefix . '_count' ];
-			$this->final_options[ 'offset' ] = 0;
+
+			$this->final_options['posts']  = $ccd_ppp_options[ $option_prefix . '_count' ];
+			$this->final_options['offset'] = 0;
 			$this->final_options['set_count'] = $ccd_ppp_options[ $option_prefix . '_count' ];
 			$this->final_options['set_count_paged'] = $ccd_ppp_options[ $option_prefix . '_count_paged' ];
+
 		} elseif ( $this->paged_view & ! empty( $ccd_ppp_options[ $option_prefix . '_count_paged' ] ) ) {
+
 			$this->page_count_offset = ( $ccd_ppp_options[ $option_prefix . '_count_paged' ] - $ccd_ppp_options[ $option_prefix . '_count' ] );
-			$this->final_options[ 'offset' ]  = ( ( $this->page_number - 2 ) * $ccd_ppp_options[ $option_prefix . '_count_paged' ] + $ccd_ppp_options[ $option_prefix . '_count' ] );
-			$this->final_options[ 'posts' ]   = $ccd_ppp_options[ $option_prefix . '_count_paged' ];
+			$this->final_options['offset']  = ( ( $this->page_number - 2 ) * $ccd_ppp_options[ $option_prefix . '_count_paged' ] + $ccd_ppp_options[ $option_prefix . '_count' ] );
+			$this->final_options['posts']   = $ccd_ppp_options[ $option_prefix . '_count_paged' ];
 			$this->final_options['set_count'] = $ccd_ppp_options[ $option_prefix . '_count' ];
 			$this->final_options['set_count_paged'] = $ccd_ppp_options[ $option_prefix . '_count_paged' ];
+
 		}
 	}
 }
-new Custom_Posts_Per_Page_Foghlaim();
+
+// Run the main plugin class.
+new CCD_Posts_Per_Page();
