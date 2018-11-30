@@ -251,7 +251,7 @@ class CCD_Posts_Per_Page {
 		}
 
 		if ( $file == $this_plugin ) {
-			$settings_link = '<a href="' . site_url( '/wp-admin/options-general.php?page=post-count-settings' ) . '">' . __('Settings', 'posts-per-page') . '</a>';
+			$settings_link = '<a href="' . site_url( '/wp-admin/options-general.php?page=posts-per-page' ) . '">' . __('Settings', 'posts-per-page') . '</a>';
 			array_unshift( $links, $settings_link );
 		}
 
@@ -267,7 +267,7 @@ class CCD_Posts_Per_Page {
 	 * @return void
 	 */
 	public function add_settings() {
-		add_options_page( __( 'Posts Per Page', 'posts-per-page' ), __( 'Posts Per Page', 'posts-per-page' ), 'manage_options', 'post-count-settings', [ $this, 'view_settings' ] );
+		add_options_page( __( 'Posts Per Page', 'posts-per-page' ), __( 'Posts Per Page', 'posts-per-page' ), 'manage_options', 'posts-per-page', [ $this, 'view_settings' ] );
 	}
 
 	/**
