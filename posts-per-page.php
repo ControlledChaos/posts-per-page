@@ -282,7 +282,7 @@ class CCD_Posts_Per_Page {
 		?>
 		<div class="wrap">
 			<div class="icon32" id="icon-options-general"></div>
-			<h2><?php _e( 'Custom Posts Per Page', 'posts-per-page' ); ?></h2>
+			<h2><?php _e( 'Posts Per Page', 'posts-per-page' ); ?></h2>
 			<h3><?php _e( 'Overview', 'posts-per-page' ); ?></h3>
 			<p style="margin-left:12px;max-width:640px;"><?php _e( 'The settings below allow you to specify how many posts per page are displayed to readers depending on the which type of page is being viewed.' ); ?></p>
 			<p style="margin-left:12px;max-width:640px;"><?php _e( 'Different values can be set for your your main view, category views, tag views, author views, archive views, search views, and
