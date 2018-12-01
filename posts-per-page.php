@@ -319,9 +319,9 @@ class CCD_Posts_Per_Page {
 		<p><?php _e( 'This section allows you to modify page view types that are
 		associated with WordPress by default. When an option is set to 0, it will not modify any page requests for
 		that view and will instead allow default values to pass through.', 'controlled-chaos-plugin' ); ?></p>
-		<p><strong><?php _e( 'Please Note', 'controlled-chaos-plugin' ); ?>:</strong>
-		<em><?php _e( 'For each setting, the box on the <strong>LEFT</strong> controls the the number of posts displayed on	the first page of that view while
-		the box on the <strong>RIGHT</strong> controls the number of posts seen on pages 2, 3, 4, etc... of that view.', 'controlled-chaos-plugin' ); ?></em></p>
+		<p><?php _e( 'Please Note', 'controlled-chaos-plugin' ); ?>:
+		<em><?php _e( 'For each setting, the box on the LEFT controls the the number of posts displayed on	the first page of that view while
+		the box on the RIGHT controls the number of posts seen on pages 2, 3, 4, etc... of that view.', 'controlled-chaos-plugin' ); ?></em></p>
 		<?php
 	}
 
@@ -386,9 +386,9 @@ class CCD_Posts_Per_Page {
 			<tr>
 				<th><?php echo $this_post_data->labels->name; ?></th>
 				<td>
-					<label for="ccd_ppp_post_type_count[<?php echo esc_attr( $p ); ?>]"><strong><?php _e( 'First Page:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_post_type_count[<?php echo esc_attr( $p ); ?>]" name="ccd_ppp_options[<?php echo esc_attr( $p ); ?>_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ $p . '_count' ] ); ?>" />
+					<label for="ccd_ppp_post_type_count[<?php echo esc_attr( $p ); ?>]"><?php _e( 'First Page:', 'tims' ); ?> </label> <input id="ccd_ppp_post_type_count[<?php echo esc_attr( $p ); ?>]" name="ccd_ppp_options[<?php echo esc_attr( $p ); ?>_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ $p . '_count' ] ); ?>" />
 					&nbsp;
-					<label for="ccd_ppp_post_type_count[<?php echo esc_attr( $p ); ?>]"><strong><?php _e( 'Subsequent Pages:', 'tims' ); ?></strong></label> <input id="ccd_ppp_post_type_count[<?php echo esc_attr( $p ); ?>]" name="ccd_ppp_options[<?php echo esc_attr( $p ); ?>_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ $p . '_count_paged' ] ); ?>" />
+					<label for="ccd_ppp_post_type_count[<?php echo esc_attr( $p ); ?>]"><?php _e( 'Subsequent Pages:', 'tims' ); ?></label> <input id="ccd_ppp_post_type_count[<?php echo esc_attr( $p ); ?>]" name="ccd_ppp_options[<?php echo esc_attr( $p ); ?>_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ $p . '_count_paged' ] ); ?>" />
 				</td>
 			</tr>
 			<?php
@@ -408,9 +408,9 @@ class CCD_Posts_Per_Page {
 		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'front_count' => 0, 'front_count_paged' => 0 ] );
 
 		?>
-		<label for="ccd_ppp_index_count[0]"><strong><?php _e( 'First Page:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_index_count[0]" name="ccd_ppp_options[front_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'front_count' ] ); ?>" />
+		<label for="ccd_ppp_index_count[0]"><?php _e( 'First Page:', 'tims' ); ?> </label> <input id="ccd_ppp_index_count[0]" name="ccd_ppp_options[front_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'front_count' ] ); ?>" />
 		&nbsp;
-		<label for="ccd_ppp_index_count[1]"><strong><?php _e( 'Subsequent Pages:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_index_count[1]" name="ccd_ppp_options[front_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'front_count_paged' ] ); ?>" />
+		<label for="ccd_ppp_index_count[1]"><?php _e( 'Subsequent Pages:', 'tims' ); ?> </label> <input id="ccd_ppp_index_count[1]" name="ccd_ppp_options[front_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'front_count_paged' ] ); ?>" />
 		<?php
 	}
 
@@ -426,9 +426,9 @@ class CCD_Posts_Per_Page {
 		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'category_count' => 0, 'category_count_paged' => 0 ] );
 
 		?>
-		<label for="ccd_ppp_category_count[0]"><strong><?php _e( 'First Page:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_category_count[0]" name="ccd_ppp_options[category_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'category_count' ] ); ?>" />
+		<label for="ccd_ppp_category_count[0]"><?php _e( 'First Page:', 'tims' ); ?> </label> <input id="ccd_ppp_category_count[0]" name="ccd_ppp_options[category_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'category_count' ] ); ?>" />
 		&nbsp;
-		<label for="ccd_ppp_category_count[1]"><strong><?php _e( 'Subsequent Pages:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_category_count[1]" name="ccd_ppp_options[category_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'category_count_paged' ] ); ?>" />
+		<label for="ccd_ppp_category_count[1]"><?php _e( 'Subsequent Pages:', 'tims' ); ?> </label> <input id="ccd_ppp_category_count[1]" name="ccd_ppp_options[category_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'category_count_paged' ] ); ?>" />
 		<?php
 	}
 
@@ -444,9 +444,9 @@ class CCD_Posts_Per_Page {
 		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'archive_count' => 0, 'archive_count_paged' => 0 ] );
 
 		?>
-		<label for="ccd_ppp_archive_count[0]"><strong><?php _e( 'First Page:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_archive_count[0]" name="ccd_ppp_options[archive_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'archive_count' ] ); ?>" />
+		<label for="ccd_ppp_archive_count[0]"><?php _e( 'First Page:', 'tims' ); ?> </label> <input id="ccd_ppp_archive_count[0]" name="ccd_ppp_options[archive_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'archive_count' ] ); ?>" />
 		&nbsp;
-		<label for="ccd_ppp_archive_count[1]"><strong><?php _e( 'Subsequent Pages:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_archive_count[1]" name="ccd_ppp_options[archive_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'archive_count_paged' ] ); ?>" />
+		<label for="ccd_ppp_archive_count[1]"><?php _e( 'Subsequent Pages:', 'tims' ); ?> </label> <input id="ccd_ppp_archive_count[1]" name="ccd_ppp_options[archive_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'archive_count_paged' ] ); ?>" />
 		<?php
 	}
 
@@ -462,9 +462,9 @@ class CCD_Posts_Per_Page {
 		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'tag_count' => 0, 'tag_count_paged' => 0 ] );
 
 		?>
-		<label for="ccd_ppp_tag_count[0]"><strong><?php _e( 'First Page:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_tag_count[0]" name="ccd_ppp_options[tag_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'tag_count' ] ); ?>" />
+		<label for="ccd_ppp_tag_count[0]"><?php _e( 'First Page:', 'tims' ); ?> </label> <input id="ccd_ppp_tag_count[0]" name="ccd_ppp_options[tag_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'tag_count' ] ); ?>" />
 		&nbsp;
-		<label for="ccd_ppp_tag_count[1]"><strong><?php _e( 'Subsequent Pages:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_tag_count[1]" name="ccd_ppp_options[tag_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'tag_count_paged' ] ); ?>" />
+		<label for="ccd_ppp_tag_count[1]"><?php _e( 'Subsequent Pages:', 'tims' ); ?> </label> <input id="ccd_ppp_tag_count[1]" name="ccd_ppp_options[tag_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'tag_count_paged' ] ); ?>" />
 		<?php
 	}
 
@@ -480,9 +480,9 @@ class CCD_Posts_Per_Page {
 		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'author_count' => 0, 'author_count_paged' => 0 ] );
 
 		?>
-		<label for="ccd_ppp_author_count[0]"><strong><?php _e( 'First Page:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_author_count[0]" name="ccd_ppp_options[author_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'author_count' ] ); ?>" />
+		<label for="ccd_ppp_author_count[0]"><?php _e( 'First Page:', 'tims' ); ?> </label> <input id="ccd_ppp_author_count[0]" name="ccd_ppp_options[author_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'author_count' ] ); ?>" />
 		&nbsp;
-		<label for="ccd_ppp_author_count[1]"><strong><?php _e( 'Subsequent Pages:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_author_count[1]" name="ccd_ppp_options[author_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'author_count_paged' ] ); ?>" />
+		<label for="ccd_ppp_author_count[1]"><?php _e( 'Subsequent Pages:', 'tims' ); ?> </label> <input id="ccd_ppp_author_count[1]" name="ccd_ppp_options[author_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'author_count_paged' ] ); ?>" />
 		<?php
 	}
 
@@ -498,9 +498,9 @@ class CCD_Posts_Per_Page {
 		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'search_count' => 0, 'search_count_paged' => 0 ] );
 
 		?>
-		<label for="ccd_ppp_search_count[0]"><strong><?php _e( 'First Page:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_search_count[0]" name="ccd_ppp_options[search_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'search_count' ] ); ?>" />
+		<label for="ccd_ppp_search_count[0]"><?php _e( 'First Page:', 'tims' ); ?> </label> <input id="ccd_ppp_search_count[0]" name="ccd_ppp_options[search_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'search_count' ] ); ?>" />
 		&nbsp;
-		<label for="ccd_ppp_search_count[1]"><strong><?php _e( 'Subsequent Pages:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_search_count[1]" name="ccd_ppp_options[search_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'search_count_paged' ] ); ?>" />
+		<label for="ccd_ppp_search_count[1]"><?php _e( 'Subsequent Pages:', 'tims' ); ?> </label> <input id="ccd_ppp_search_count[1]" name="ccd_ppp_options[search_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'search_count_paged' ] ); ?>" />
 		<?php
 	}
 
@@ -516,9 +516,9 @@ class CCD_Posts_Per_Page {
 		$ccd_ppp_options = get_option( 'ccd_ppp_options', [ 'default_count' => 0, 'default_count_paged' => 0 ] );
 
 		?>
-		<label for="ccd_ppp_default_count[0]"><strong><?php _e( 'First Page:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_default_count[0]" name="ccd_ppp_options[default_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'default_count' ] ); ?>" />
+		<label for="ccd_ppp_default_count[0]"><?php _e( 'First Page:', 'tims' ); ?> </label> <input id="ccd_ppp_default_count[0]" name="ccd_ppp_options[default_count]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'default_count' ] ); ?>" />
 		&nbsp;
-		<label for="ccd_ppp_default_count[1]"><strong><?php _e( 'Subsequent Pages:', 'tims' ); ?></strong> </label> <input id="ccd_ppp_default_count[1]" name="ccd_ppp_options[default_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'default_count_paged' ] ); ?>" />
+		<label for="ccd_ppp_default_count[1]"><?php _e( 'Subsequent Pages:', 'tims' ); ?> </label> <input id="ccd_ppp_default_count[1]" name="ccd_ppp_options[default_count_paged]" size="3" type="text" value="<?php echo esc_attr( $ccd_ppp_options[ 'default_count_paged' ] ); ?>" />
 		<?php
 	}
 
