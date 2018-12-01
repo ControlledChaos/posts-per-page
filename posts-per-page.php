@@ -7,7 +7,6 @@
  * @author      Greg Sweet <greg@ccdzine.com>
  * @copyright   Copyright © 2018, Greg Sweet
  * @link        https://github.com/ControlledChaos/posts-per-page
- * @link        https://jeremyfelt.com/wordpress/plugins/posts-per-page/
  * @license     GPL-3.0+ http://www.gnu.org/licenses/gpl-3.0.txt
  *
  * Plugin Name:  Posts Per Page
