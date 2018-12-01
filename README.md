@@ -13,16 +13,16 @@ Posts Per Page allows you to specify how many posts are displayed per page depen
 
 Settings are available for:
 
-* Home (Index) Page
-    * As long as view is set to blog posts, not static page.
-* Category Pages
-* Tag Pages
-* Author Pages
-* Archive Pages
-* Search Pages
-* Default Page (*Any page not covered above.*)
-* Custom Post Type archive pages
-    * All Custom Post Types are detected automatically.
+* Home (index) page
+    * As long as view is set to blog posts, not static page
+* Category pages
+* Tag pages
+* Author pages
+* Archive pages
+* Search pages
+* Default page (*Any page not covered above.*)
+* Custom post type archive pages
+    * All public custom post types are detected automatically
 
 Each of the above settings can have a different value for the first page displayed **and** subsequent paged views.
 
