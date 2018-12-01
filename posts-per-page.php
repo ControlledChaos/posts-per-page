@@ -48,6 +48,20 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+// Get plugins path to check for active plugins.
+include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
+/**
+ * If the Controlled Chaos plugin or the Custom Posts per Page
+ * plugin are active then stop here.
+ *
+ * @since  1.0.0
+ * @return void
+ */
+if ( is_plugin_active( 'controlled-chaos-plugin/controlled-chaos-plugin.php' ) || class_exists( 'Custom_Posts_Per_Page_Foghlaim' ) ) {
+	return;
+}
+
 /**
  * The core plugin class
  *
